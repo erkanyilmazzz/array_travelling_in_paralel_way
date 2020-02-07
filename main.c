@@ -45,9 +45,9 @@ int main(int argc,char ** argv){
     pthread_create(&thread2,NULL,direction_2,&arr);
     
     
-    pthread_join(thread1,NULL);
     pthread_join(thread2,NULL);
-
+    pthread_join(thread1,NULL);
+    
 
     return 0;
 }
@@ -59,18 +59,14 @@ travel array in -> this direcction
 */
 void* direction_1(void* param){
     array * _arr=(array*) param;
-    for (size_t i = 0; i < _arr->size; i++)
+    for (size_t i = 0; i < _arr->size/2; i++)
     {
-        pthread_mutex_lock(&(lock));
-        if(_arr->arr[i]!=1){
             _arr->arr[i]=1;
-        }else{
-            pthread_mutex_unlock(&(lock));
-            pthread_exit(0);
-        }
-        //sleep(0.1);
+      
+        pthread_mutex_lock(&lock);              
         print_arr(_arr);
-        pthread_mutex_unlock(&(lock));
+        pthread_mutex_unlock(&lock);
+    
     }
     pthread_exit(0);
 }
@@ -81,21 +77,13 @@ travel array in <- this direcction
 */
 void* direction_2(void* param){
  array * _arr=(array*) param;
-    for (size_t i = 0; i < _arr->size; i++)
+    for (size_t i = _arr->size; i >= _arr->size/2; i--)
     {
-        pthread_mutex_lock(&(lock));
-        if(_arr->arr[_arr->size-i]!=1)
-            _arr->arr[_arr->size-i]=1;
-        else
-        {
-            pthread_mutex_unlock(&(lock));
-            pthread_exit(0);
-        }
-            
+        _arr->arr[i]=1;
+
+        pthread_mutex_lock(&lock);              
         print_arr(_arr);
-        //sleep(0.1);
-        pthread_mutex_unlock(&(lock));
-        
+        pthread_mutex_unlock(&lock);
     }
     pthread_exit(0);
 }
