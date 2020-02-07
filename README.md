@@ -1,0 +1,1 @@
+# array_travelling_in_paralel_way
